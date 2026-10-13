@@ -6,7 +6,6 @@ import re
 import time
 import requests
 
-from sklearn import metrics
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -378,13 +377,13 @@ def load_graph():
 
 
 @st.cache_resource
-def load_models():
-    return (
-        joblib.load(TRAFFIC_MODEL_FILE),
-        joblib.load(RISK_MODEL_FILE),
-        joblib.load(RISK_CLASSIFIER_FILE)
-    )
+def load_traffic_model():
+    return joblib.load(TRAFFIC_MODEL_FILE)
 
+
+@st.cache_resource
+def load_risk_model():
+    return joblib.load(RISK_MODEL_FILE)
 
 required = [
     GRAPH_FILE,
@@ -409,8 +408,6 @@ try:
     st.info("RouteWise startup: loading risk prediction model...")
     risk_model = joblib.load(RISK_MODEL_FILE)
 
-    st.info("RouteWise startup: loading risk-level classifier...")
-    risk_classifier = joblib.load(RISK_CLASSIFIER_FILE)
     st.success("Traffic prediction model loaded.")
 
     st.info("RouteWise startup: loading features...")
@@ -472,7 +469,14 @@ def prepare_prediction_data(data):
 
 
 def calculate_predictions(data):
-    prediction_data = prepare_prediction_data(data)
+    global traffic_model, risk_model
+
+    if "traffic_model" not in globals():
+        traffic_model = load_traffic_model()
+    
+    if "risk_model" not in globals():
+        risk_model = load_risk_model()
+        prediction_data = prepare_prediction_data(data)
 
     result = data.copy()
     result["predicted_traffic"] = traffic_model.predict(
