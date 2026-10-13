@@ -380,9 +380,9 @@ def load_graph():
 @st.cache_resource
 def load_models():
     return (
-        joblib.load(TRAFFIC_MODEL_FILE),
-        joblib.load(RISK_MODEL_FILE),
-        joblib.load(RISK_CLASSIFIER_FILE)
+        joblib.load(TRAFFIC_MODEL_FILE, map_mode="r"),
+        joblib.load(RISK_MODEL_FILE, map_mode="r"),
+        joblib.load(RISK_CLASSIFIER_FILE, map_mode="r")
     )
 
 
