@@ -411,7 +411,6 @@ try:
     st.info("RouteWise startup: loading road network...")
     graph = load_graph()
 
-    
     st.info("RouteWise startup: loading traffic prediction model...")
     traffic_model = joblib.load(TRAFFIC_MODEL_FILE)
     st.success("Traffic prediction model loaded.")
@@ -433,7 +432,6 @@ except Exception as e:
     st.error(f"RouteWise startup failed: {type(e).__name__}: {e}")
     st.exception(e)
     st.stop()
-
 # ------------------------------------------------------------
 # PREDICTION HELPERS
 # ------------------------------------------------------------
